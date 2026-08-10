@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class GameConsoleServices {
+public class GameConsoleService {
 
     @Autowired
     GameConsoleRepository gameConsoleRepository;
