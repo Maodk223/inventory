@@ -1,13 +1,14 @@
 package com.gamechanger.inventory.controller;
 
-import com.gamechanger.inventory.model.Genre;
+import com.gamechanger.inventory.dto.genre.CreateGenreDTO;
+import com.gamechanger.inventory.dto.genre.GenreDTO;
 import com.gamechanger.inventory.service.GenreService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
+@Tag(name = "Genres")
 @RequestMapping("/genres")
 class GenreController {
 
@@ -15,15 +16,15 @@ class GenreController {
     private GenreService genreService;
 
     @GetMapping
-    public Iterable<Genre> getGenres() { return genreService.getGenres(); }
+    public Iterable<GenreDTO> getGenres() { return genreService.getGenres(); }
 
     @GetMapping("/{id}")
-    public Genre getGenre(@PathVariable final long id) {
+    public GenreDTO getGenre(@PathVariable final long id) {
         return genreService.getGenre(id).orElse(null);
     }
 
     @PostMapping
-    public Genre createGenre(@RequestBody Genre genre) { return genreService.saveGenre(genre); }
+    public GenreDTO createGenre(@RequestBody CreateGenreDTO genre) { return genreService.saveGenre(genre); }
 
     @DeleteMapping("/{id}")
     public void deleteGenre(@PathVariable final long id) {
@@ -31,15 +32,8 @@ class GenreController {
     }
 
     @PutMapping("/{id}")
-    public Genre updateGenre(@PathVariable final long id, @RequestBody Genre genre) {
-        Optional<Genre> optionalGenre = genreService.getGenre(id);
-        if(optionalGenre.isEmpty()) return null;
-        Genre currentGenre = optionalGenre.get();
-
-        String name = genre.getName();
-        if(name != null) currentGenre.setName(name);
-
-        return genreService.saveGenre(currentGenre);
+    public GenreDTO updateGenre(@PathVariable final long id, @RequestBody CreateGenreDTO genre) {
+        return genreService.updateGenre(id, genre);
     }
 
 }

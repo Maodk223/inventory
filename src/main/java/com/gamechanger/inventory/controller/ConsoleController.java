@@ -1,13 +1,14 @@
 package com.gamechanger.inventory.controller;
 
-import com.gamechanger.inventory.model.Console;
+import com.gamechanger.inventory.dto.console.ConsoleDTO;
+import com.gamechanger.inventory.dto.console.CreateConsoleDTO;
 import com.gamechanger.inventory.service.ConsoleService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
+@Tag(name = "Consoles")
 @RequestMapping("/consoles")
 class ConsoleController {
 
@@ -15,15 +16,15 @@ class ConsoleController {
     private ConsoleService consoleService;
 
     @GetMapping
-    public Iterable<Console> getConsoles() { return consoleService.getConsoles(); }
+    public Iterable<ConsoleDTO> getConsoles() { return consoleService.getConsoles(); }
 
     @GetMapping("/{id}")
-    public Console getConsole(@PathVariable final long id) {
+    public ConsoleDTO getConsole(@PathVariable final long id) {
         return consoleService.getConsole(id).orElse(null);
     }
 
     @PostMapping
-    public Console createConsole(@RequestBody Console console) { return consoleService.saveConsole(console); }
+    public ConsoleDTO createConsole(@RequestBody CreateConsoleDTO console) { return consoleService.saveConsole(console); }
 
     @DeleteMapping("/{id}")
     public void deleteConsole(@PathVariable final long id) {
@@ -31,15 +32,8 @@ class ConsoleController {
     }
 
     @PutMapping("/{id}")
-    public Console updateConsole(@PathVariable final long id, @RequestBody Console console) {
-        Optional<Console> optionalConsole = consoleService.getConsole(id);
-        if(optionalConsole.isEmpty()) return null;
-        Console currentConsole = optionalConsole.get();
-
-        String name = console.getName();
-        if(name != null) currentConsole.setName(name);
-
-        return consoleService.saveConsole(currentConsole);
+    public ConsoleDTO updateConsole(@PathVariable final long id, @RequestBody CreateConsoleDTO console) {
+        return consoleService.updateConsole(id, console);
     }
 
 }
