@@ -23,6 +23,11 @@ class GenreController {
         return genreService.getGenre(id).orElse(null);
     }
 
+    @GetMapping("/name/{name}")
+    public GenreDTO getGenre(@PathVariable final String name) {
+        return genreService.getGenre(name).orElse(null);
+    }
+
     @PostMapping
     public GenreDTO createGenre(@RequestBody CreateGenreDTO genre) { return genreService.saveGenre(genre); }
 

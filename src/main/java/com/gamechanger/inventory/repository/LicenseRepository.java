@@ -4,6 +4,9 @@ import com.gamechanger.inventory.model.License;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface LicenseRepository extends CrudRepository<License, Long> {
+    Optional<License> findByName(String name);
 }

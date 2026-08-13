@@ -23,6 +23,11 @@ class ModeController {
         return modeService.getMode(id).orElse(null);
     }
 
+    @GetMapping("/name/{name}")
+    public ModeDTO getMode(@PathVariable final String name) {
+        return modeService.getMode(name).orElse(null);
+    }
+
     @PostMapping
     public ModeDTO createMode(@RequestBody CreateModeDTO mode) { return modeService.saveMode(mode); }
 
