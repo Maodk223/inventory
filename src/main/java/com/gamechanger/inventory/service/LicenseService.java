@@ -20,6 +20,10 @@ public class LicenseService {
         return licenseRepository.findById(id).map(LicenseDTO::new);
     }
 
+    public Optional<LicenseDTO> getLicense(final String name) {
+        return licenseRepository.findByName(name).map(LicenseDTO::new);
+    }
+
     public Iterable<LicenseDTO> getLicenses() {
         ArrayList<LicenseDTO> licenses = new ArrayList<>();
         licenseRepository.findAll().forEach(l -> licenses.add(new LicenseDTO(l)));
@@ -29,6 +33,10 @@ public class LicenseService {
     public void deleteLicense(final long id) { licenseRepository.deleteById(id); }
 
     public LicenseDTO saveLicense(CreateLicenseDTO dto) {
+        Optional<License> exist = licenseRepository.findByName(dto.getName());
+        if (exist.isPresent())
+            return new LicenseDTO(exist.get());
+
         License license = new License();
         license.setName(dto.getName());
         return new LicenseDTO(licenseRepository.save(license));

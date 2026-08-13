@@ -18,6 +18,8 @@ public class StudioService {
 
     public Optional<StudioDTO> getStudio(final long id) { return studioRepository.findById(id).map(StudioDTO::new); }
 
+    public Optional<StudioDTO> getStudio(final String name) { return studioRepository.findByName(name).map(StudioDTO::new); }
+
     public Iterable<StudioDTO> getStudios() {
         ArrayList<StudioDTO> studios = new ArrayList<>();
         studioRepository.findAll().forEach(s->studios.add(new StudioDTO(s)));
@@ -27,6 +29,10 @@ public class StudioService {
     public void deleteStudio(final long id) { studioRepository.deleteById(id); }
 
     public StudioDTO saveStudio(CreateStudioDTO dto) {
+        Optional<Studio> exist = studioRepository.findByName(dto.getName());
+        if (exist.isPresent())
+            return new StudioDTO(exist.get());
+
         Studio studio = new Studio();
         studio.setName(dto.getName());
         return new StudioDTO(studioRepository.save(studio));

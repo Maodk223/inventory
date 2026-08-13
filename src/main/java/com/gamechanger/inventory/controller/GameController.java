@@ -23,6 +23,11 @@ class GameController {
         return gameService.getGame(id).orElse(null);
     }
 
+    @GetMapping("/name/{name}")
+    public GameDTO getGame(@PathVariable final String name) {
+        return gameService.getGame(name).orElse(null);
+    }
+
     @PostMapping
     public GameDTO createGame(@RequestBody CreateGameDTO game) { return gameService.saveGame(game); }
 

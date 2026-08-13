@@ -18,6 +18,8 @@ public class PlatformService {
 
     public Optional<PlatformDTO> getPlatform(final long id) { return platformRepository.findById(id).map(PlatformDTO::new); }
 
+    public Optional<PlatformDTO> getPlatform(final String name) { return platformRepository.findByName(name).map(PlatformDTO::new); }
+
     public Iterable<PlatformDTO> getPlatforms() {
         ArrayList<PlatformDTO> platforms = new ArrayList<>();
         platformRepository.findAll().forEach(platform -> platforms.add(new PlatformDTO(platform)));
@@ -27,6 +29,10 @@ public class PlatformService {
     public void deletePlatform(final long id) { platformRepository.deleteById(id); }
 
     public PlatformDTO savePlatform(CreatePlatformDTO dto) {
+        Optional<Platform> exist = platformRepository.findByName(dto.getName());
+        if (exist.isPresent())
+            return new PlatformDTO(exist.get());
+
         Platform platform = new Platform();
         platform.setName(dto.getName());
         return new PlatformDTO(platformRepository.save(platform));
