@@ -23,6 +23,11 @@ class PlatformController {
         return platformService.getPlatform(id).orElse(null);
     }
 
+    @GetMapping("/name/{name}")
+    public PlatformDTO getPlatform(@PathVariable final String name) {
+        return platformService.getPlatform(name).orElse(null);
+    }
+
     @PostMapping
     public PlatformDTO createPlatform(@RequestBody CreatePlatformDTO platform) { return platformService.savePlatform(platform); }
 

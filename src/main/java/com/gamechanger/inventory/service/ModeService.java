@@ -18,6 +18,8 @@ public class ModeService {
 
     public Optional<ModeDTO> getMode(final long id) { return modeRepository.findById(id).map(ModeDTO::new); }
 
+    public Optional<ModeDTO> getMode(final String name) { return modeRepository.findByName(name).map(ModeDTO::new); }
+
     public Iterable<ModeDTO> getModes() {
         ArrayList<ModeDTO> modes = new ArrayList<>();
         modeRepository.findAll().forEach(m -> modes.add(new ModeDTO(m)));
@@ -27,6 +29,10 @@ public class ModeService {
     public void deleteMode(final long id) { modeRepository.deleteById(id); }
 
     public ModeDTO saveMode(CreateModeDTO dto) {
+        Optional<Mode> exist = modeRepository.findByName(dto.getName());
+        if (exist.isPresent())
+            return new ModeDTO(exist.get());
+
         Mode mode = new Mode();
         mode.setName(dto.getName());
         return new ModeDTO(modeRepository.save(mode));

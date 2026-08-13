@@ -23,6 +23,16 @@ class ConsoleController {
         return consoleService.getConsole(id).orElse(null);
     }
 
+    @GetMapping("/name/{name}")
+    public ConsoleDTO getConsole(@PathVariable final String name) {
+        return consoleService.getConsole(name).orElse(null);
+    }
+
+    @GetMapping("/alias/{alias}")
+    public ConsoleDTO getConsoleByAlias(@PathVariable final String alias)  {
+        return consoleService.getConsoleByAlias(alias).orElse(null);
+    }
+
     @PostMapping
     public ConsoleDTO createConsole(@RequestBody CreateConsoleDTO console) { return consoleService.saveConsole(console); }
 

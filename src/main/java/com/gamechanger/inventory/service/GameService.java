@@ -29,6 +29,10 @@ public class GameService {
         return gameRepository.findById(id).map(GameDTO::new);
     }
 
+    public Optional<GameDTO> getGame(final String name) {
+        return gameRepository.findByName(name).map(GameDTO::new);
+    }
+
     public Iterable<GameDTO> getGames() {
         ArrayList<GameDTO> games = new ArrayList<>();
         gameRepository.findAll().forEach(game -> games.add(new GameDTO(game)));
@@ -38,6 +42,10 @@ public class GameService {
     public void deleteGame(final long id) { gameRepository.deleteById(id); }
 
     public GameDTO saveGame(CreateGameDTO dto) {
+        Optional<Game> exist = gameRepository.findByName(dto.getName());
+        if (exist.isPresent())
+            return new GameDTO(exist.get());
+
         Game game = new Game();
 
         game.setName(dto.getName());

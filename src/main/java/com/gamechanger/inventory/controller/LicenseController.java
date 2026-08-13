@@ -23,6 +23,11 @@ class LicenseController {
         return licenseService.getLicense(id).orElse(null);
     }
 
+    @GetMapping("/name/{name}")
+    public LicenseDTO getLicense(@PathVariable final String name) {
+        return licenseService.getLicense(name).orElse(null);
+    }
+
     @PostMapping
     public LicenseDTO createLicense(@RequestBody CreateLicenseDTO license) { return licenseService.saveLicense(license); }
 

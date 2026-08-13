@@ -28,6 +28,14 @@ public class ConsoleService {
         return  consoleRepository.findById(id).map(ConsoleDTO::new);
     }
 
+    public Optional<ConsoleDTO> getConsole(final String name) {
+        return  consoleRepository.findByName(name).map(ConsoleDTO::new);
+    }
+
+    public Optional<ConsoleDTO> getConsoleByAlias(final String alias) {
+        return  consoleRepository.findByAlias(alias).map(ConsoleDTO::new);
+    }
+
     public Iterable<ConsoleDTO> getConsoles() {
         ArrayList<ConsoleDTO> consoles = new ArrayList<>();
         consoleRepository.findAll().forEach(c->consoles.add(new ConsoleDTO(c)));
@@ -37,6 +45,10 @@ public class ConsoleService {
     public void deleteConsole(final long id) { consoleRepository.deleteById(id); }
 
     public ConsoleDTO saveConsole(CreateConsoleDTO dto) {
+        Optional<Console> exist = consoleRepository.findByName(dto.getName());
+        if (exist.isPresent())
+            return new ConsoleDTO(exist.get());
+
         Console console = new Console();
 
         console.setName(dto.getName());

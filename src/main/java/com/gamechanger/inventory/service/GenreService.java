@@ -20,6 +20,10 @@ public class GenreService {
         return genreRepository.findById(id).map(GenreDTO::new);
     }
 
+    public Optional<GenreDTO> getGenre(final String name) {
+        return genreRepository.findByName(name).map(GenreDTO::new);
+    }
+
     public Iterable<GenreDTO> getGenres() {
         ArrayList<GenreDTO> genres = new ArrayList<>();
         genreRepository.findAll().forEach(g -> genres.add(new GenreDTO(g)));
@@ -29,6 +33,10 @@ public class GenreService {
     public void deleteGenre(final long id) { genreRepository.deleteById(id); }
 
     public GenreDTO saveGenre(CreateGenreDTO dto) {
+        Optional<Genre> exist = genreRepository.findByName(dto.getName());
+        if (exist.isPresent())
+            return new GenreDTO(exist.get());
+
         Genre genre = new Genre();
         genre.setName(dto.getName());
         return new GenreDTO(genreRepository.save(genre));

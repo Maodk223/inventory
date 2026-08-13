@@ -23,6 +23,11 @@ class StudioController {
         return studioService.getStudio(id).orElse(null);
     }
 
+    @GetMapping("/name/{name}")
+    public StudioDTO getStudio(@PathVariable final String name) {
+        return studioService.getStudio(name).orElse(null);
+    }
+
     @PostMapping
     public StudioDTO createStudio(@RequestBody CreateStudioDTO studio) { return studioService.saveStudio(studio); }
 
