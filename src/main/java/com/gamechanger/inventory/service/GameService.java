@@ -1,10 +1,11 @@
 package com.gamechanger.inventory.service;
 
+import com.gamechanger.inventory.dto.console.CreateConsoleDTO;
 import com.gamechanger.inventory.dto.game.CreateGameDTO;
 import com.gamechanger.inventory.dto.game.GameDTO;
-import com.gamechanger.inventory.model.Game;
-import com.gamechanger.inventory.model.License;
-import com.gamechanger.inventory.model.Studio;
+import com.gamechanger.inventory.dto.game_console.CreateGameConsoleDTO;
+import com.gamechanger.inventory.model.*;
+import com.gamechanger.inventory.repository.GameConsoleRepository;
 import com.gamechanger.inventory.repository.GameRepository;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class GameService {
 
     @Autowired
     private GameRepository gameRepository;
+
+    @Autowired
+    private GameConsoleRepository gameConsoleRepository;
 
     private final EntityManager entityManager;
 
@@ -72,5 +76,67 @@ public class GameService {
         game.setLicense(entityManager.getReference(License.class, dto.getLicenseId()));
 
         return new GameDTO(gameRepository.save(game));
+    }
+
+    public GameDTO linkGenre(Long gameId, Long genreId) {
+        Game game = gameRepository.findById(gameId).orElseThrow();
+        Genre genre = entityManager.getReference(Genre.class, genreId);
+        if(!game.getGenres().contains(genre))
+            game.addGenre(genre);
+        return new GameDTO(gameRepository.save(game));
+    }
+
+    public GameDTO unlinkGenre(Long gameId, Long genreId) {
+        Game game = gameRepository.findById(gameId).orElseThrow();
+        Genre genre = entityManager.getReference(Genre.class, genreId);
+        game.removeGenre(genre);
+        return new GameDTO(gameRepository.save(game));
+    }
+
+    public GameDTO linkMode(Long gameId, Long modeId) {
+        Game game = gameRepository.findById(gameId).orElseThrow();
+        Mode mode = entityManager.getReference(Mode.class, modeId);
+        if(!game.getModes().contains(mode))
+            game.addMode(mode);
+        return new GameDTO(gameRepository.save(game));
+    }
+
+    public GameDTO unlinkMode(Long gameId, Long modeId) {
+        Game game = gameRepository.findById(gameId).orElseThrow();
+        Mode mode = entityManager.getReference(Mode.class, modeId);
+        game.removeMode(mode);
+        return new GameDTO(gameRepository.save(game));
+    }
+
+    public GameDTO linkConsole(Long gameId, Long consoleId, CreateGameConsoleDTO dto) {
+        Game game = gameRepository.findById(gameId).orElseThrow();
+        Console console = entityManager.getReference(Console.class, consoleId);
+        GameConsoleKey key = new GameConsoleKey();
+        key.setGameId(gameId);
+        key.setConsoleId(consoleId);
+
+
+        GameConsole gameConsole = entityManager.find(GameConsole.class, key);
+        if(gameConsole == null) {
+            gameConsole = new GameConsole();
+            gameConsole.setGame(game);
+            gameConsole.setConsole(console);
+        }
+        gameConsole.setJacket(dto.getJacket());
+        gameConsoleRepository.save(gameConsole);
+
+        return new GameDTO(game);
+    }
+
+    public GameDTO unlinkConsole(Long gameId, Long consoleId) {
+        Game game = gameRepository.findById(gameId).orElseThrow();
+        GameConsoleKey key = new GameConsoleKey();
+        key.setGameId(gameId);
+        key.setConsoleId(consoleId);
+
+        GameConsole gameConsole = entityManager.getReference(GameConsole.class, key);
+        gameConsoleRepository.delete(gameConsole);
+
+        return new GameDTO(game);
     }
 }

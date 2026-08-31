@@ -1,5 +1,6 @@
 package com.gamechanger.inventory.dto.game;
 
+import com.gamechanger.inventory.dto.game_console.GameConsoleDTO;
 import com.gamechanger.inventory.dto.genre.SimpleGenreDTO;
 import com.gamechanger.inventory.dto.license.SimpleLicenseDTO;
 import com.gamechanger.inventory.dto.mode.SimpleModeDTO;
@@ -24,6 +25,7 @@ public class GameDTO {
 
     private List<SimpleGenreDTO> genres;
     private List<SimpleModeDTO> modes;
+    private List<GameConsoleDTO>  consoles;
 
     public GameDTO(Game game) {
         this.id = game.getId();
@@ -40,6 +42,7 @@ public class GameDTO {
 
         this.modes = game.getModes().stream().map(SimpleModeDTO::new).toList();
         this.genres = game.getGenres().stream().map(SimpleGenreDTO::new).toList();
+        this.consoles = game.getConsoles().stream().map(GameConsoleDTO::new).toList();
     }
 
 }
